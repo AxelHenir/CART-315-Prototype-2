@@ -9,26 +9,38 @@ public class Game : MonoBehaviour
     public int playerCount;
     public PlayerControls controls;
 
+    public class Build{
+        public Vector3 location;
+        
+        public bool isRoof;
+        public int value;
+
+        public int score(){
+            if(isRoof){
+                return 0;
+            } else {
+                return value * (int)location.z;
+            }
+        }
+    }
+
     public class Player{
         public int points;
+        public List<int> rolls = new List<int>();
+
+        public List<Build> builds = new List<Build>(); 
 
         public void gainPoints(int pts){
             this.points += pts;
         }
     }
     public List<Player> playerList = new List<Player>();
+    public int activePlayer;
 
-
-    public GameState gameState;
-    public enum GameState{
-        Menu,
-        Tutorial,
-        PlayerSelect,
-        InGame
-    }
 
     public TurnState turnState;
     public enum TurnState{
+        NewTurn,
         RollDice,
         ChooseDieToBuild,
         ChooseSpotToBuild,
@@ -55,8 +67,7 @@ public class Game : MonoBehaviour
     }
     
     void Start(){
-        gameState = GameState.Menu;
-        turnState = TurnState.RollDice;
+        turnState = TurnState.NewTurn;
 
         playerCount = PlayerCountScript.playerCount;
 
@@ -72,37 +83,8 @@ public class Game : MonoBehaviour
     }
 
     void Update(){
-        GetInput();
-        GameStateHandler();
-    }
 
-    public void GetInput(){
-
-    }
-
-    // Handles which UI, camera and such for each "scene" of the game
-    public void GameStateHandler(){
-
-        switch (gameState){
-
-            case GameState.Menu:
-                
-                break;
-
-            case GameState.Tutorial:
-                
-                break;
-
-            case GameState.PlayerSelect:
-                
-                break;
-
-            case GameState.InGame:
-
-                TurnStateHandler();
-                break;
-            
-        }
+        TurnStateHandler();
 
     }
 
@@ -110,6 +92,9 @@ public class Game : MonoBehaviour
     public void TurnStateHandler(){
 
         switch (turnState){
+
+            case TurnState.NewTurn:
+                break;
 
             case TurnState.RollDice:
                 
@@ -129,5 +114,26 @@ public class Game : MonoBehaviour
         }
 
     }
+
+    // Press Button to begin turn
+
+    // Roll 2 D6 - 
+    public void rollDice(){
+
+        playerList[activePlayer].rolls.Add(Random.Range(1,7));
+        playerList[activePlayer].rolls.Add(Random.Range(1,7));
+        turnState = TurnState.ChooseDieToBuild;
+        
+    }
+
+    // Player chooses which die to build with
+
+    // Player chooses which spot to build on
+    
+    // Building
+
+    // Scoring takes place with other die's result
+
+
 
 }
