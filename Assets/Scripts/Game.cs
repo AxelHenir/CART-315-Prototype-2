@@ -5,7 +5,18 @@ using UnityEngine.InputSystem;
 
 public class Game : MonoBehaviour
 {
+    public MainMenu PlayerCountScript;
+    public int playerCount;
     public PlayerControls controls;
+
+    public class Player{
+        public int points;
+
+        public void gainPoints(int pts){
+            this.points += pts;
+        }
+    }
+    public List<Player> playerList = new List<Player>();
 
 
     public GameState gameState;
@@ -28,6 +39,8 @@ public class Game : MonoBehaviour
 
     void Awake(){
         controls = new PlayerControls();
+        
+
 
         //Callbacks
         controls.Gameplay.Confirm.performed += context => confirm();
@@ -41,31 +54,37 @@ public class Game : MonoBehaviour
         controls.Gameplay.Disable();
     }
     
-    void Start()
-    {
+    void Start(){
         gameState = GameState.Menu;
         turnState = TurnState.RollDice;
+
+        playerCount = PlayerCountScript.playerCount;
+
+        for (int i = 0; i < playerCount; i++){
+            Player newPlayer = new Player();
+            playerList.Add(newPlayer);
+        }
+        Debug.Log(playerList);
     }
 
     void confirm(){
         Debug.Log("confirmed");
     }
 
-    void Update()
-    {
+    void Update(){
         GetInput();
         GameStateHandler();
     }
 
-     // Handles input
-    private void GetInput(){
+    public void GetInput(){
 
     }
 
     // Handles which UI, camera and such for each "scene" of the game
-    private void GameStateHandler(){
+    public void GameStateHandler(){
 
         switch (gameState){
+
             case GameState.Menu:
                 
                 break;
@@ -84,12 +103,14 @@ public class Game : MonoBehaviour
                 break;
             
         }
+
     }
 
     // Handles the mechanics of the turn
-    private void TurnStateHandler(){
+    public void TurnStateHandler(){
 
         switch (turnState){
+
             case TurnState.RollDice:
                 
                 break;
